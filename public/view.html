@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<head><title>Рейтинговая таблица игры "Гоночки"</title></head>
+<body>
+  <a href="javascript:prevPage()" id="btn_prev">Prev</a>
+  page: <span id="page"></span>
+  <a href="javascript:nextPage()" id="btn_next">Next</a>
+  <div id="listingTable"></div>
+</body>
+<footer>
+<script>
+var current_page = 1;
+function prevPage()
+{
+    if (current_page > 1) {
+        current_page--;
+        changePage(current_page);
+    }
+}
+
+function nextPage()
+{
+      current_page++;
+      changePage(current_page);
+}
+
+function changePage(page)
+{
+    var btn_next = document.getElementById("btn_next");
+    var btn_prev = document.getElementById("btn_prev");
+    var listing_table = document.getElementById("listingTable");
+    var page_span = document.getElementById("page");
+
+    if (page < 1) page = 1;
+    listing_table.innerHTML = "";
+
+    getData(page, listing_table);
+    page_span.innerHTML = page;
+
+    if (page == 1) {
+        btn_prev.style.visibility = "hidden";
+    } else {
+        btn_prev.style.visibility = "visible";
+    }
+}
+
+function getData(page, listing_table)
+{
+  const query = `
+  query {
+    ratingPage(page: ${page}) {
+      name
+      speed
+      time
+      color
+    }
+  }
+`;
+const url = "/graphql";
+const opts = {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ query })
+};
+fetch(url, opts).then(res => res.json()).then(result => {
+      Object.values(result.data.ratingPage).forEach(element => {
+        listing_table.innerHTML += JSON.stringify(element) + "<br>";
+      });
+    });;
+}
+
+window.onload = function() {
+    changePage(1);
+};
+</script>
+</footer>
