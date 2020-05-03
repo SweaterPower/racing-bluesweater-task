@@ -33,7 +33,7 @@ const resolvers = {
         ratingPage: async (obj, args, context, info) => await UserData.paginate({}, {
             page: args.page,
             limit: pageSize,
-            sort:  { time: -1 },
+            sort:  { time: 1 },
             lean: true
         }).then(result => result.docs)
     },

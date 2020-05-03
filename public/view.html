@@ -63,7 +63,7 @@ const opts = {
 };
 fetch(url, opts).then(res => res.json()).then(result => {
       Object.values(result.data.ratingPage).forEach(element => {
-        listing_table.innerHTML += JSON.stringify(element) + "<br>";
+        listing_table.innerHTML += "<b>Name: </b>" + element.name + "<b> Time: </b>" + element.time + "<br>";
       });
     });;
 }
